@@ -1,19 +1,23 @@
 :root {
   --bg: #fffaf6; --fg: #2d2a32; --muted: #7b7482; --accent: #e0606b;
   --steel: #2aa3b3; --line: #2d2a32; --field: #ffffff; --border: #ecdcd6;
-  --wash-1: #f7a8a0; --wash-2: #7fd3dc; --wash-3: #fbd38d;
+  --wash-1: #f7a8a0; --bar: #f29aa5; --wash-2: #7fd3dc; --wash-3: #fbd38d;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #1b1a20; --fg: #f3eef0; --muted: #a9a1b0; --accent: #f08a8f;
     --steel: #4fc3d1; --line: #f3eef0; --field: #25232b; --border: #45414d;
-    --wash-1: #8a3f4a; --wash-2: #1f6b76; --wash-3: #8a6a2c;
+    --wash-1: #8a3f4a; --bar: #8a3f4a; --wash-2: #1f6b76; --wash-3: #8a6a2c;
   }
 }
 
 body {
   margin: 0;
-  background: var(--bg); color: var(--fg);
+  /* Safari reads background-color for its bar tint, so that is coral; the cream
+     the page actually shows is painted on top as a background image. */
+  background-color: var(--bar);
+  background-image: linear-gradient(var(--bg), var(--bg));
+  color: var(--fg);
   font: 17px/1.6 system-ui, -apple-system, sans-serif;
 }
 /* Gradient band from the boseitup logo, pinned to the top edge. iPhone Safari
