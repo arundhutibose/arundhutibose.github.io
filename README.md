@@ -41,3 +41,20 @@ to that inbox; letters arrive only after its link is clicked.
 The title, description and image shown when the link is shared live in
 `index.html`; the image is `public/og-image.jpg` (1200x630). Set `SITE_URL` in
 `vite.config.ts` to the site's full address, or chat apps won't show the image.
+
+## Deploy to GitHub Pages
+
+The site lives at https://arundhutibose.github.io/ in the
+`arundhutibose/arundhutibose.github.io` repository.
+
+1. In the repository's **Settings → Pages → Build and deployment**, set
+   **Source** to **GitHub Actions**.
+2. Push the source code, including `.github/workflows/deploy.yml`, to `main`.
+3. Wait for **Deploy to GitHub Pages** to finish in the **Actions** tab.
+   You can also start it manually with **Run workflow**.
+
+The workflow runs `npm ci` and `npm run build`, then publishes only `dist/`.
+Serving the source directory directly will fail because browsers cannot run
+`src/main.tsx`. Keep the source `index.html` pointing to that file; Vite replaces
+it with the compiled JavaScript URL during the build. The default Vite base
+(`/`) is correct for this root-domain site.
