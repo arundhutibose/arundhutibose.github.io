@@ -16,6 +16,22 @@ body {
   background: var(--bg); color: var(--fg);
   font: 17px/1.6 system-ui, -apple-system, sans-serif;
 }
+/* Gradient band from the boseitup logo, pinned to the top edge. iPhone Safari
+   (iOS 26+) ignores the theme-color tag and tints its bars from a fixed element
+   at the top of the page, so the band is fixed and has a solid coral
+   background-color under the gradient for the browser to pick up. */
+body { padding-top: 6px; }
+body::before {
+  content: ''; position: fixed; top: 0; left: 0; right: 0; z-index: 10; height: 6px;
+  background-color: #f29aa5;
+  background-image: linear-gradient(90deg, #f29aa5, #f7c59f 35%, #7fd3dc 70%, #c6a4e0);
+}
+@media (prefers-color-scheme: dark) {
+  body::before {
+    background-color: #8a3f4a;
+    background-image: linear-gradient(90deg, #8a3f4a, #8a6a2c 35%, #1f6b76 70%, #5b4a7a);
+  }
+}
 main { overflow-x: clip; margin: 0 auto; max-width: 46rem; padding: 3rem 1rem 4rem; text-align: center; }
 .hero { max-width: 36rem; margin: 0 auto; }
 
