@@ -35,3 +35,9 @@ React + TypeScript + Vite.
 Send posts the letter to FormSubmit, which forwards it to the address in
 `content.ts`. The first letter ever sent triggers a one-time activation email
 to that inbox; letters arrive only after its link is clicked.
+
+## Link preview
+
+The title, description and image shown when the link is shared live in
+`index.html`; the image is `public/og-image.jpg` (1200x630). Set `SITE_URL` in
+`vite.config.ts` to the site's full address, or chat apps won't show the image.
