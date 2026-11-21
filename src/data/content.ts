@@ -5,6 +5,8 @@ export const site = {
   byline: 'Artist & Art Psychotherapist',
   headline: "Sorry, I'm under construction",
   tagline: 'A new home for my paintings is being built. Open to commissions meanwhile.',
+  artworkHeading: 'Artwork',
+  contactHeading: 'Get in touch',
   instagram: {
     handle: 'boseitup',
     url: 'https://www.instagram.com/boseitup/',

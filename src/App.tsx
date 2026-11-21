@@ -8,22 +8,25 @@ export default function App() {
   return (
     <main>
       <header className="hero">
-        <p className="name">{site.name}</p>
+        <h1 className="name">{site.name}</h1>
         <p className="byline">{site.byline}</p>
       </header>
 
-      <Gallery />
+      <Gallery heading={site.artworkHeading} />
 
-      <section className="connect">
-        <InstagramCard instagram={site.instagram} />
-        <ContactLetter letter={site.letter} />
+      <section aria-labelledby="contact-heading">
+        <h2 id="contact-heading">{site.contactHeading}</h2>
+        <div className="connect">
+          <InstagramCard instagram={site.instagram} />
+          <ContactLetter letter={site.letter} />
+        </div>
       </section>
 
-      <section className="hero building">
+      <section className="hero building" aria-labelledby="building-heading">
         <div className="stage">
           <Crane />
         </div>
-        <h1>{site.headline}</h1>
+        <h2 id="building-heading" className="headline">{site.headline}</h2>
         <p className="tagline">{site.tagline}</p>
       </section>
     </main>
