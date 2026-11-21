@@ -48,7 +48,7 @@ a { color: var(--accent); }
 
 .building { margin-top: 3rem; }
 
-/* clear of the menu button when the menu scrolls a section to the top */
+/* clear of the menu button when the menu scrolls a section to the top (read by glideTo in App.tsx) */
 main > section { scroll-margin-top: 4rem; }
 /* on phones each heading is a button that folds its section away. It looks like the
    plain heading; the chevron hangs off its right edge so the title stays centred. */
@@ -90,9 +90,9 @@ h2 [aria-expanded='false'] svg { transform: rotate(-90deg); }
 .insta-handle { color: var(--accent); font-weight: 600; }
 .insta-hint { font-size: .8rem; color: var(--muted); }
 
-/* menu: a round card pinned top-left, just under the gradient band and below it in
+/* menu (phones only; switched on in the phone block): a round card pinned top-left, just under the gradient band and below it in
    z-order, so the band stays the fixed element Safari tints its bar from */
-.menu { position: fixed; top: calc(6px + .5rem); left: .5rem; z-index: 9; text-align: left; }
+.menu { display: none; position: fixed; top: calc(6px + .5rem); left: .5rem; z-index: 9; text-align: left; }
 .menu summary, .menu nav { box-shadow: 0 8px 22px rgb(0 0 0 / .1); }
 .menu summary {
   display: grid; place-items: center; box-sizing: border-box; width: 2.75rem; height: 2.75rem;
@@ -288,7 +288,6 @@ h2 [aria-expanded='false'] svg { transform: rotate(-90deg); }
   .crane * { animation: none !important; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
   h2 svg { transition: transform .2s ease; }
 }
 
@@ -296,6 +295,7 @@ h2 [aria-expanded='false'] svg { transform: rotate(-90deg); }
 @media (max-width: 640px) {
   .connect { grid-template-columns: minmax(0, 1fr); justify-items: center; }
   .pieces, .pieces > div { gap: .5rem; }
+  .menu { display: block; }
   .headline { font-size: 1.55rem; }
   .letter { padding: 1.25rem 1.1rem 1.1rem; }
   .stamp { top: .8rem; right: .8rem; width: 2rem; height: 2.4rem; }
