@@ -19,18 +19,6 @@ const SECTIONS = [
       </div>
     ),
   },
-  {
-    id: 'building',
-    title: site.headline,
-    content: (
-      <div className="hero">
-        <div className="stage">
-          <Crane />
-        </div>
-        <p className="tagline">{site.tagline}</p>
-      </div>
-    ),
-  },
 ]
 
 export default function App() {
@@ -83,6 +71,14 @@ export default function App() {
           {content}
         </Section>
       ))}
+
+      <section className="hero building" aria-labelledby="building-heading">
+        <div className="stage">
+          <Crane />
+        </div>
+        <h2 id="building-heading" className="headline">{site.headline}</h2>
+        <p className="tagline">{site.tagline}</p>
+      </section>
     </main>
   )
 }
