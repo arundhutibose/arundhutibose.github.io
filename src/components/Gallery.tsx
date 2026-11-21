@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 // Each piece has a small copy (the grid) and a large copy (shown on click), with
 // the same file name in src/assets/gallery/thumb and src/assets/gallery/full.
@@ -30,31 +30,59 @@ const PIECES = [
   { file: '11', width: 700, height: 525, alt: 'Many drawings, prints and collages spread out across the floor' },
 ]
 
-export default function Gallery({ heading }: { heading: string }) {
+const GAP = 12 // px, the .75rem gap between columns in index.css
+const MIN_COLUMN = 240 // px
+
+export default function Gallery() {
   const dialog = useRef<HTMLDialogElement>(null)
   const [open, setOpen] = useState<(typeof PIECES)[number]>()
 
+  // We place the pieces ourselves: CSS columns are balanced by the browser, and
+  // Safari leaves one column a whole picture taller than the other.
+  const pieces = useRef<HTMLDivElement>(null)
+  const [count, setCount] = useState(2)
+  useLayoutEffect(() => {
+    const el = pieces.current!
+    const measure = () => setCount(Math.max(2, Math.floor((el.clientWidth + GAP) / (MIN_COLUMN + GAP))))
+    measure() // before the first paint, so the column count never flashes
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  // In order, each piece goes to the shortest column (the leftmost on a tie);
+  // a column's height is the sum of its pieces' height / width.
+  const columns = Array.from({ length: count }, () => ({ height: 0, pieces: [] as typeof PIECES }))
+  for (const piece of PIECES) {
+    const shortest = columns.reduce((a, b) => (b.height < a.height ? b : a))
+    shortest.pieces.push(piece)
+    shortest.height += piece.height / piece.width
+  }
+
   return (
-    <section className="gallery" aria-labelledby="artwork-heading">
-      <h2 id="artwork-heading">{heading}</h2>
-      <div className="pieces">
-        {PIECES.map((piece) => (
-          <button
-            key={piece.file}
-            type="button"
-            onClick={() => {
-              setOpen(piece)
-              dialog.current!.showModal()
-            }}
-          >
-            <img
-              src={thumbs[`../assets/gallery/thumb/${piece.file}.jpg`]}
-              width={piece.width}
-              height={piece.height}
-              alt={piece.alt}
-              loading="lazy"
-            />
-          </button>
+    <div className="gallery">
+      <div className="pieces" ref={pieces}>
+        {columns.map((column, i) => (
+          <div key={i}>
+            {column.pieces.map((piece) => (
+              <button
+                key={piece.file}
+                type="button"
+                onClick={() => {
+                  setOpen(piece)
+                  dialog.current!.showModal()
+                }}
+              >
+                <img
+                  src={thumbs[`../assets/gallery/thumb/${piece.file}.jpg`]}
+                  width={piece.width}
+                  height={piece.height}
+                  alt={piece.alt}
+                  loading="lazy"
+                />
+              </button>
+            ))}
+          </div>
         ))}
       </div>
 
@@ -64,6 +92,6 @@ export default function Gallery({ heading }: { heading: string }) {
         {open && <img key={open.file} src={fulls[`../assets/gallery/full/${open.file}.jpg`]} alt={open.alt} />}
         <button type="button" aria-label="Close">×</button>
       </dialog>
-    </section>
+    </div>
   )
 }

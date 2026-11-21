@@ -41,20 +41,27 @@ main { overflow-x: clip; margin: 0 auto; padding: 3rem 1rem 4rem; text-align: ce
 
 .name { margin: 0; font-family: 'Sacramento', 'Snell Roundhand', cursive; font-size: 3.2rem; font-weight: normal; line-height: 1.1; color: var(--accent); }
 .byline { margin: .25rem 0 0; font-size: .85rem; letter-spacing: .04em; color: var(--muted); }
-.headline { font-family: Georgia, 'Times New Roman', serif; font-weight: normal; font-size: 2rem; margin: 1rem 0 .25rem; }
-.tagline { margin: 0; color: var(--muted); }
+.tagline { margin: 1rem 0 0; color: var(--muted); }
 h2 { font-family: Georgia, serif; font-weight: normal; font-size: 1.3rem; margin: 3rem 0 1rem; }
 a { color: var(--accent); }
 
-.building { margin-top: 3rem; }
+/* clear of the menu button when the menu scrolls a section to the top */
+main > section { scroll-margin-top: 4rem; }
+/* on phones each heading is a button that folds its section away. It looks like the
+   plain heading; the chevron hangs off its right edge so the title stays centred. */
+h2 button { position: relative; max-width: calc(100% - 2.4em); padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
+h2 svg { position: absolute; top: 50%; left: 100%; width: .8em; height: .8em; margin: -.4em 0 0 .4em; color: var(--muted); }
+h2 [aria-expanded='false'] svg { transform: rotate(-90deg); }
 
-/* artwork grid: the window width sets the column count, and every piece keeps its own shape */
-.pieces { columns: 15rem; column-gap: .75rem; }
-.pieces > button {
-  display: block; width: 100%; margin: 0 0 .75rem; padding: 0; border: 0; background: none;
-  break-inside: avoid; border-radius: 6px; overflow: hidden; cursor: zoom-in;
+/* artwork grid: Gallery.tsx sets the column count from the width and places each piece; every piece keeps its own shape */
+.pieces, .pieces > div { display: flex; gap: .75rem; }
+.pieces { align-items: flex-start; }
+.pieces > div { flex: 1; min-width: 0; flex-direction: column; }
+.pieces button {
+  display: block; width: 100%; padding: 0; border: 0; background: none;
+  border-radius: 6px; overflow: hidden; cursor: zoom-in;
 }
-.pieces > button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.pieces button:focus-visible, h2 button:focus-visible, .menu summary:focus-visible, .menu a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .gallery img { display: block; width: 100%; height: auto; }
 .lightbox { padding: 0; border: 0; background: none; max-width: none; max-height: none; overflow: visible; cursor: zoom-out; }
 .lightbox::backdrop { background: rgb(0 0 0 / .88); }
@@ -68,9 +75,9 @@ a { color: var(--accent); }
 .connect { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 2rem; align-items: start; max-width: 46rem; margin: 0 auto; }
 
 
+.insta, .menu summary, .menu nav { background: var(--field); border: 1px solid var(--border); border-radius: 14px; }
 .insta {
   display: grid; justify-items: center; gap: .6rem; padding: 1.25rem 1rem;
-  background: var(--field); border: 1px solid var(--border); border-radius: 14px;
   color: var(--fg); text-decoration: none; transition: transform .15s ease, box-shadow .15s ease;
 }
 .insta:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgb(0 0 0 / .1); }
@@ -79,6 +86,23 @@ a { color: var(--accent); }
 .qr svg { display: block; width: 100%; max-width: 180px; height: auto; }
 .insta-handle { color: var(--accent); font-weight: 600; }
 .insta-hint { font-size: .8rem; color: var(--muted); }
+
+/* menu: a round card pinned top-left, just under the gradient band and below it in
+   z-order, so the band stays the fixed element Safari tints its bar from */
+.menu { position: fixed; top: calc(6px + .5rem); left: .5rem; z-index: 9; text-align: left; }
+.menu summary, .menu nav { box-shadow: 0 8px 22px rgb(0 0 0 / .1); }
+.menu summary {
+  display: grid; place-items: center; box-sizing: border-box; width: 2.75rem; height: 2.75rem;
+  border-radius: 50%; list-style: none; cursor: pointer;
+}
+.menu summary::-webkit-details-marker { display: none; }
+.menu summary svg { width: 1.3rem; height: 1.3rem; }
+/* while open, an invisible layer over the window: a tap on it is a tap on summary, which closes the menu */
+.menu[open] > summary::before { content: ''; position: fixed; inset: 0; }
+.menu nav { position: absolute; z-index: 1; top: calc(100% + .4rem); left: 0; }
+.menu ul { margin: 0; padding: .4rem 0; list-style: none; }
+.menu a { display: block; padding: .4rem 1.1rem; font-family: Georgia, serif; white-space: nowrap; color: var(--fg); text-decoration: none; }
+.menu a:hover, .menu a:focus-visible { color: var(--accent); }
 
 .letter {
   position: relative; width: 100%; box-sizing: border-box; text-align: left;
@@ -260,13 +284,15 @@ a { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .crane * { animation: none !important; }
 }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  h2 svg { transition: transform .2s ease; }
+}
 
 /* phones: kept last so these override the rules above */
 @media (max-width: 640px) {
   .connect { grid-template-columns: minmax(0, 1fr); justify-items: center; }
-  .pieces { columns: 2; column-gap: .5rem; }
-  .pieces > button { margin-bottom: .5rem; }
-  .headline { font-size: 1.55rem; }
+  .pieces, .pieces > div { gap: .5rem; }
   .letter { padding: 1.25rem 1.1rem 1.1rem; }
   .stamp { top: .8rem; right: .8rem; width: 2rem; height: 2.4rem; }
   .letter-row { margin-right: 2.6rem; font-size: .9rem; }
